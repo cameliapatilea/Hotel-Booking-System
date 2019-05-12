@@ -48,6 +48,7 @@ public:
         else if(i == "nu")
             p.micDejun = false;
         else throw invalid_argument("Error! Must specifiy if the person wants breakfast or not");
+        return input;
 
     }
     friend ostream &operator<<(ostream &output, const Participant &p)
@@ -59,6 +60,7 @@ public:
         else if(p.micDejun == false)
             //output << "Participantul doreste mic dejun in camera" << '\n';
             output << "nu" << '\n';
+        return output;
     }
 };
 
@@ -95,16 +97,24 @@ public:
     friend istream &operator >> (istream &input, Grup &G)
     {
         Participant temp;
-        input >> G.nrParticipanti;
-        for(int i = 0; i < G.nrParticipanti; i++)
-        {
-            input >> temp;
-            G.participanti.push_back(temp);
+        try {
+            input >> G.nrParticipanti;
+            for(int i = 0; i < G.nrParticipanti; i++)
+            {
+                input >> temp;
+                G.participanti.push_back(temp);
+            }
+            input >> G.perioada;
+            if(G.perioada < 1 || G.perioada > 10)
+                throw invalid_argument("Perioada de sedere trebuie sa fie de minim o noapte, respectiv maxim 10 nopti");
+            input >> G.tipSala;
         }
-        input >> G.perioada;
-        if(G.perioada < 1 || G.perioada > 10)
-            throw invalid_argument("Perioada de sedere trebuie sa fie de minim o noapte, respectiv maxim 10 nopti");
-        input >> G.tipSala;
+        catch(exception e) {
+
+        }
+
+
+        return input;
     }
     friend ostream &operator <<(ostream &output, const Grup &G)
     {
@@ -115,7 +125,8 @@ public:
         /*output << "Perioada de sedere este de " << G.perioada << "zile" <<'\n';
         output << "Tipul de sala este :" << G.tipSala << '\n';*/
         output << G.perioada << '\n';
-        output << G.tipSala << '\n';
+        output << G.tipSala <<'\n';
+        return output;
     }
 
     /*
@@ -137,6 +148,40 @@ public:
     string get_tipSala()
     {
         return tipSala;
+    }
+    int get_perioada()
+    {
+        return perioada;
+    }
+    int get_sosire()
+    {
+        return sosire;
+    }
+    void citire_CazariConfirmate(istream &in, Grup &G)
+    {
+        Participant temp;
+
+            in >> G.nrParticipanti;
+            for(int i = 0; i < G.nrParticipanti; i++)
+            {
+                in>> temp;
+                G.participanti.push_back(temp);
+            }
+            in >> G.perioada;
+            if(G.perioada < 1 || G.perioada > 10)
+                throw invalid_argument("Perioada de sedere trebuie sa fie de minim o noapte, respectiv maxim 10 nopti");
+            in  >> G.sosire;
+            in >> G.tipSala;
+
+    }
+    void afisare_CazariConfirmate(ostream &out, Grup &G)
+    {
+        out <<G.nrParticipanti << '\n';
+        for(int i = 0; i < G.nrParticipanti; i++)
+            out << G.participanti[i];
+        out << G.perioada << '\n';
+        out << G.sosire << '\n';
+        out << G.tipSala <<'\n';
     }
 
 };
